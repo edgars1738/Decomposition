@@ -2,7 +2,7 @@
 
 ## This assignment performs different types of decomposition, such as STL, Seasonally Adjusted, and Classical Decomposition
 
-### Below are the step-by-step of this assignment:
+### Below is what was done on this assignment:
 - Loading the required packages, importing the data set and converting into monthly time series.
 - Separating the data into trend, seasonal, and remainder components using STL assuming the seasonal pattern stays consistent over time.
 - Removing the seasonal component using STL to highlight underlying data patterns. Since the original data set is already seasonally adjusted, the STL-adjusted series may differ from the original because STL estimates its own seasonal component.
