@@ -1,0 +1,58 @@
+---
+title: "Assignment 5"
+author: "Edgar Santiago"
+date: "10/9/2026"
+output: html_document
+---
+
+```{r}
+#Data Setup - Converting to Time Series
+## Loading the required packages, importing the data set and converting into monthly time series. 
+library(fpp2)
+library(forecast)
+
+TOTALSA <- read.csv("TOTALSA.csv")
+
+TOTALSA$observation_date <- as.Date(
+  TOTALSA$observation_date,
+  format = "%m/%d/%Y")
+
+TOTALSA_ts <- ts(
+  TOTALSA$TOTALSA,
+  start = c(1976, 1),
+  frequency = 12)
+
+attributes(TOTALSA_ts)
+head(TOTALSA_ts)
+plot(TOTALSA_ts)
+
+#STL Seasonal and Trend Decomposition
+## Separating the data into trend, seasonal, and remainder components using STL assuming the seasonal pattern stays consistent over time.
+stl_decomp <- stl(TOTALSA_ts,s.window = "periodic")
+plot(stl_decomp)
+attributes(stl_decomp)
+
+#Seasonal Adjustment using STL
+## Removing the seasonal component using STL to highlight underlying data patterns. Since the original data set is already seasonally adjusted, the STL-adjusted series may differ from the original because STL estimates its own seasonal component.
+seasadj(stl_decomp)
+plot(TOTALSA_ts)
+lines(seasadj(stl_decomp), col="red")
+
+#Forecast Next 15 Periods using STL
+## Forecasting the next 15 monthly periods using STL decomposition, displaying predicted values and prediction intervals, and plotting the forecast against historical data.
+f_stl <-forecast(stl_decomp,h=15)
+f_stl
+plot(f_stl)
+
+#Classical Time Series Decomposition
+## Using classical decomposition to separate the data into trend, seasonal, and remainder components and plotting the results.
+decomp_elec <- decompose(TOTALSA_ts)
+attributes(decomp_elec)
+plot(decomp_elec)
+
+#Seasonal Adjustment Using Classical Decomposition
+## Removing the estimated seasonal component using classical decomposition and plotting the adjusted data to highlight underlying patterns.
+seasadj(decomp_elec)
+plot(TOTALSA_ts)
+lines(seasadj(decomp_elec), col="pink")
+```
